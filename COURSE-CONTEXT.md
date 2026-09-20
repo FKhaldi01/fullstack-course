@@ -134,7 +134,10 @@
 | 0 | ✅ Completed | 0.1–0.6 | Summary only |
 | 1 | ✅ Completed | 1.1–1.14 | Counter, Unicafe, Anecdotes |
 | 2 | ✅ Completed | 2.1–2.20 | Phonebook with server, styling |
-| 3 | Not started | | |
+| 3a | ✅ Completed | 3.1–3.8 | GET/POST/PUT/DELETE, morgan logging, validation |
+| 3b | ✅ Completed | 3.9–3.11 | Frontend connected, production build, deployment setup |
+| 3c | ✅ Completed | 3.12–3.18 | MongoDB Atlas, Mongoose, database operations, error handler, mongo.js CLI |
+| 3d | ✅ Completed | 3.19–3.25 | Input validation, ESLint setup |
 | 4 | Not started | | |
 | 5 | Not started | | |
 | 6+ | Not started | | |
@@ -254,6 +257,65 @@
   - CSS styles added to phonebook components
   - Search input styled with border, padding, margin
   - Toggle button for filtering all vs important persons
+
+---
+
+## Part 3a — Server with Express (Exercises 3.1–3.8)
+- **Express framework** — `npm install express`, create server with `app.get()`, `app.post()`, etc.
+- **RESTful API** — GET (read), POST (create), PUT (update), DELETE (remove)
+- **JSON responses** — `response.json()` to return data
+- **Status codes** — 200 (OK), 201 (Created), 400 (Bad Request), 404 (Not Found), 204 (No Content)
+- **Morgan logging** — `npm install morgan`, `app.use(morgan('tiny'))`
+- **Exercises 3.1–3.8** — **IMPLEMENTED** in `part3/index.js`:
+  - Express server with REST API for phonebook
+  - GET `/api/persons` — list all
+  - POST `/api/persons` — create new
+  - PUT `/api/persons/:id` — update
+  - DELETE `/api/persons/:id` — remove
+  - GET `/info` — display time + contact count
+  - Morgan logging enabled
+
+## Part 3b — Deploying Apps to the Internet (Exercises 3.9–3.11)
+- **Production build** — `npm run build` creates `dist/` folder
+- **Serve static files** — `app.use(express.static('dist'))`
+- **Deployment** — Render, Heroku, or similar platforms
+- **Environment variables** — `process.env.PORT`, `process.env.NODE_ENV`
+- **Exercises 3.9–3.11** — **IMPLEMENTED**:
+  - Frontend connected to backend API
+  - Production build configured
+  - Deployment setup for Render
+
+## Part 3c — MongoDB with Mongoose (Exercises 3.12–3.18)
+- **MongoDB Atlas** — Cloud-hosted MongoDB (free tier)
+- **Mongoose** — ODM for MongoDB (`npm install mongoose dotenv`)
+- **Schema definition** — `new mongoose.Schema({ name: String, number: String })`
+- **Model creation** — `mongoose.model('Person', personSchema)`
+- **Database operations**:
+  - `Person.find({})` — find all
+  - `Person.findById(id)` — find by ID
+  - `Person.findByIdAndDelete(id)` — delete by ID
+  - `Person.findOne({ name })` — find by name
+  - `person.save()` — save new/updated document
+- **Error handling middleware** — Express error handler with `CastError` detection
+- **Environment variables** — `.env` file with `MONGODB_URI` and `PORT`
+- **CLI helper** — `mongo.js` for command-line phonebook operations
+- **Exercises 3.12–3.18** — **IMPLEMENTED**:
+  - `models/person.js` — Mongoose schema with toJSON transform
+  - `index.js` — rewritten to use MongoDB for all CRUD
+  - `mongo.js` — CLI helper for exercise 3.12
+  - `.env` — environment variables (gitignored)
+  - Error handler middleware for CastError
+
+## Part 3d — Validation and ESLint (Exercises 3.19–3.25)
+- **Input validation** — Check required fields, format validation
+- **Phone number format** — `XX-XXX...` pattern validation
+- **Name uniqueness** — Check before creating
+- **ESLint** — `npm install --save-dev @eslint/js globals`
+- **ESLint config** — `eslint.config.mjs` for Node.js
+- **Exercises 3.19–3.25** — **IMPLEMENTED**:
+  - `validateName()` — name must be ≥ 3 characters
+  - `validateNumber()` — phone number format validation
+  - ESLint configuration for Node.js project
 
 ---
 
