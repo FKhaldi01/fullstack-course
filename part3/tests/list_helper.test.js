@@ -28,6 +28,20 @@ describe('total likes', () => {
     const result = listHelper.totalLikes(listWithOneBlog)
     assert.strictEqual(result, 5)
   })
+
+  test('when list has multiple blogs, sums all likes', () => {
+    const blogs = [
+      { title: 'First', likes: 5 },
+      { title: 'Second', likes: 7 },
+      { title: 'Third', likes: 3 },
+    ]
+
+    assert.strictEqual(listHelper.totalLikes(blogs), 15)
+  })
+
+  test('when list is empty, returns zero', () => {
+    assert.strictEqual(listHelper.totalLikes([]), 0)
+  })
 })
 
 describe('favorite blog', () => {
@@ -60,6 +74,38 @@ describe('favorite blog', () => {
       title: 'Canonical string reduction',
       author: 'Edsger W. Dijkstra',
       likes: 12,
+    })
+  })
+})
+
+describe('most blogs', () => {
+  const blogs = [
+    { title: 'First', author: 'Robert C. Martin', likes: 5 },
+    { title: 'Second', author: 'Edsger W. Dijkstra', likes: 10 },
+    { title: 'Third', author: 'Robert C. Martin', likes: 3 },
+    { title: 'Fourth', author: 'Robert C. Martin', likes: 8 },
+  ]
+
+  test('returns the author with the most blogs', () => {
+    assert.deepStrictEqual(listHelper.mostBlogs(blogs), {
+      author: 'Robert C. Martin',
+      blogs: 3,
+    })
+  })
+})
+
+describe('most likes', () => {
+  const blogs = [
+    { title: 'First', author: 'Robert C. Martin', likes: 5 },
+    { title: 'Second', author: 'Edsger W. Dijkstra', likes: 10 },
+    { title: 'Third', author: 'Robert C. Martin', likes: 3 },
+    { title: 'Fourth', author: 'Edsger W. Dijkstra', likes: 8 },
+  ]
+
+  test('returns the author with the most likes', () => {
+    assert.deepStrictEqual(listHelper.mostLikes(blogs), {
+      author: 'Edsger W. Dijkstra',
+      likes: 18,
     })
   })
 })

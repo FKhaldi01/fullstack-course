@@ -9,60 +9,61 @@ const validateNumber = (number) => {
   return number && /^\d{2,3}-\d{3,}$/.test(number)
 }
 
-personsRouter.get('/', (request, response) => {
-  Person.find({}).then(persons => {
-    response.json(persons)
-  })
+personsRouter.get('/', async (request, response) => {
+  const persons = await Person.find({})
+  response.json(persons)
 })
 
-personsRouter.get('/info', (request, response) => {
-  Person.find({}).then(persons => {
-    const currentTime = new Date()
-    const numberOfPersons = persons.length
-    response.send(`<p>Time: ${currentTime}</p><p>Phonebook has ${numberOfPersons} contacts</p>`)
-  })
+personsRouter.get('/info', async (request, response) => {
+  const persons = await Person.find({})
+  const currentTime = new Date()
+  const numberOfPersons = persons.length
+  response.send(`<p>Time: ${currentTime}</p><p>Phonebook has ${numberOfPersons} contacts</p>`)
 })
 
-personsRouter.get('/:id', (request, response, next) => {
-  Person.findById(request.params.id)
-    .then(person => {
-      if (person) {
-        response.json(person)
-      } else {
-        response.status(404).end()
-      }
-    })
-    .catch(error => next(error))
+personsRouter.get('/:id', async (request, response, next) => {
+  try {
+    const person = await Person.findById(request.params.id)
+
+    if (person) {
+      response.json(person)
+    } else {
+      response.status(404).end()
+    }
+  } catch (error) {
+    next(error)
+  }
 })
 
-personsRouter.delete('/:id', (request, response, next) => {
-  Person.findByIdAndDelete(request.params.id)
-    .then(() => {
-      response.status(204).end()
-    })
-    .catch(error => next(error))
+personsRouter.delete('/:id', async (request, response, next) => {
+  try {
+    await Person.findByIdAndDelete(request.params.id)
+    response.status(204).end()
+  } catch (error) {
+    next(error)
+  }
 })
 
-personsRouter.put('/:id', (request, response, next) => {
-  const { name, number } = request.body
+personsRouter.put('/:id', async (request, response, next) => {
+  try {
+    const { name, number } = request.body
+    const person = await Person.findById(request.params.id)
 
-  Person.findById(request.params.id)
-    .then(person => {
-      if (!person) {
-        return response.status(404).end()
-      }
+    if (!person) {
+      return response.status(404).end()
+    }
 
-      person.name = name
-      person.number = number
+    person.name = name
+    person.number = number
 
-      return person.save().then(updatedPerson => {
-        response.json(updatedPerson)
-      })
-    })
-    .catch(error => next(error))
+    const updatedPerson = await person.save()
+    response.json(updatedPerson)
+  } catch (error) {
+    next(error)
+  }
 })
 
-personsRouter.post('/', (request, response, next) => {
+personsRouter.post('/', async (request, response, next) => {
   const body = request.body
 
   if (!body.name || !body.number) {
@@ -83,7 +84,9 @@ personsRouter.post('/', (request, response, next) => {
     })
   }
 
-  Person.findOne({ name: body.name }).then(existing => {
+  try {
+    const existing = await Person.findOne({ name: body.name })
+
     if (existing) {
       return response.status(400).json({
         error: 'name must be unique',
@@ -95,10 +98,11 @@ personsRouter.post('/', (request, response, next) => {
       number: body.number,
     })
 
-    person.save().then(savedPerson => {
-      response.json(savedPerson)
-    })
-  }).catch(error => next(error))
+    const savedPerson = await person.save()
+    response.json(savedPerson)
+  } catch (error) {
+    next(error)
+  }
 })
 
 module.exports = personsRouter
